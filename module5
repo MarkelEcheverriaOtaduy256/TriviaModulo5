@@ -1,0 +1,74 @@
+import random
+import json
+
+# Cargar el dataset de preguntas desde un archivo JSON
+try:
+    with open(r'c:\Users\marke\OneDrive\Documentos\IA\Python\triviademaider.json', 'r', encoding='utf-8') as f:
+        trivia_data = json.load(f)
+except FileNotFoundError:
+    print("Error: No se encontró el archivo 'triviademaider.json'. Verifica la ruta.")
+    exit(1)
+except json.JSONDecodeError:
+    print("Error: El archivo 'triviademaider.json' tiene un formato inválido.")
+    exit(1)
+
+# Verificar la estructura del JSON cargado
+if not isinstance(trivia_data, list) or any('tag' not in category or 'qa' not in category for category in trivia_data):
+    print("Error: El archivo JSON debe ser una lista de categorías con 'tag' y 'qa'. Revisa el formato.")
+    exit(1)
+
+# Función para evaluar la respuesta del usuario
+def evaluate_answer(user_input, correct_answer):
+    return "correcta" if user_input.lower() == correct_answer.lower() else "incorrecta"
+
+# Función principal del juego de trivia
+def trivia_game():
+    print("¡Bienvenido al Trivial Jedi! Te haré preguntas de diferentes categorías. Escribe 'salir' para terminar.")
+    score = 0
+    total_questions = 0
+    print("Para cada pregunta, selecciona la opción correcta (A, B o C). ¡Buena suerte!")
+    
+    while True:
+        # Seleccionar una categoría aleatoria
+        category = random.choice(trivia_data)
+        tag = category['tag']
+        print(f"\nCategoría: {tag.capitalize()}")
+        
+        # Seleccionar una pregunta aleatoria de la categoría
+        question_item = random.choice(category['qa'])
+        question = question_item['pattern']
+        options = question_item['options']
+        correct_answer = question_item['correct'].lower()
+        
+        # Mostrar la pregunta y las opciones
+        print(f"Pregunta: {question}")
+        for option in options:
+            print(option)
+        
+        # Obtener la respuesta del usuario
+        user_input = input("Tu respuesta (A, B o C): ").strip().lower()
+        
+        if user_input == 'salir':
+            break
+        
+        # Validar que la entrada sea válida (A, B o C)
+        if user_input not in ['a', 'b', 'c']:
+            print("Por favor, ingresa solo A, B o C (o 'salir' para terminar).")
+            continue
+        
+        total_questions += 1
+        result = evaluate_answer(user_input, correct_answer)
+        
+        if result == "correcta":
+            print(f"¡Correcto! La respuesta es: {correct_answer.upper()}")
+            score += 1
+        else:
+            print(f"Incorrecto. La respuesta correcta era: {correct_answer.upper()}")
+        
+        print(f"Puntuación: {score}/{total_questions}")
+
+    print(f"\nJuego terminado. Puntuación final: {score}/{total_questions}")
+
+# Ejecutar el juego
+if __name__ == "__main__":
+    trivia_game()
