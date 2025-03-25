@@ -3,7 +3,7 @@ import json
 
 # Cargar el dataset de preguntas desde un archivo JSON
 try:
-    with open(r'c:\Users\marke\OneDrive\Documentos\IA\Python\triviademaider.json', 'r', encoding='utf-8') as f:
+    with open(r'c:triviamodulo5.json', 'r', encoding='utf-8') as f:
         trivia_data = json.load(f)
 except FileNotFoundError:
     print("Error: No se encontró el archivo 'triviademaider.json'. Verifica la ruta.")
